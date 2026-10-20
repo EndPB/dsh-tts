@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Speech (TTS)",
+    "description": "Manage CosyVoice and Edge TTS providers, voices, credentials, async or blocking generation, and click-only playback."
+  }
+}

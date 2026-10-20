@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "语音合成（TTS）",
+    "description": "管理 CosyVoice 与 Edge TTS 供应商、音色、凭据、异步/阻塞生成和点击播放。"
+  }
+}

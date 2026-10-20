@@ -1,0 +1,57 @@
+# dsh-tts — provider-based TTS for DeepSeek Harness.
+#
+# Values here are deployment defaults. The Settings page (设置 → 语音合成)
+# writes %DSH_HOME%/tts/settings.json, which overrides them at runtime.
+# Secrets are NOT stored here: CosyVoice resolves `apiKeyRef` through the DSH
+# credentials store (or the environment) on every request.
+#
+# `auto`:
+#   off    — only the tts_speak tool and the per-message Read aloud button
+#   tagged — the model calls tts_speak when a spoken answer is wanted (default)
+#   always — every completed assistant turn is read aloud automatically
+#
+# `speech.mode`:
+#   async    — tts_speak starts a background job and returns immediately (default)
+#   blocking — tts_speak waits for the complete audio file
+# Playback itself is never automatic: the user clicks 语音 on the card or reply.
+- insert:
+    - id: dsh-tts
+      name: '@local/dsh-tts'
+      config:
+        auto: tagged
+        provider: cosyvoice
+        systemPrompt: true
+        speech:
+          confirmThreshold: 100
+          mode: async
+        cache:
+          enabled: true
+          maxEntries: 0
+          maxSizeMB: 0
+        tag: '[[tts]]'
+        chunkChars: 600
+        maxChars: 6000
+        providers:
+          cosyvoice:
+            enabled: true
+            model: cosyvoice-v3.5-plus
+            voice: cosyvoice-v3.5-plus-vd-bailian-72c7dac8472a44779921f2b12d370972
+            format: mp3
+            sampleRate: 24000
+            bitRate: 64
+            volume: 50
+            rate: 1
+            pitch: 1
+            instruction: ''
+            languageHint: zh
+            apiKeyRef: DASHSCOPE_API_KEY
+            baseUrl: wss://dashscope.aliyuncs.com/api-ws/v1/inference
+            streaming: true
+          edge:
+            enabled: true
+            python: python
+            voice: zh-CN-XiaoyiNeural
+            rate: '+10%'
+            pitch: '+0Hz'
+            volume: '+0%'
+            format: audio-24khz-48kbitrate-mono-mp3
