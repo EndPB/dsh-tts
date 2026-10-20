@@ -157,7 +157,7 @@ check('background synthesis completes with CosyVoice', spokenRecord.complete ===
 const edgeTool = await tool.execute({ text: '你好，这是 Edge 异步测试。', provider: 'edge' }, {})
 check('async Edge also returns a pending stream', edgeTool.complete === false && edgeTool.streaming === true, JSON.stringify({ complete: edgeTool.complete }))
 const edgeRecord = await waitSpeech(edgeTool.id)
-check('deferred Edge synthesis completes in the background', edgeRecord.complete === true && edgeRecord.bytes > 1000 && edgeRecord.provider === 'edge', `${edgeRecord.bytes} bytes`)
+check('deferred Edge synthesis completes in the background', edgeRecord.complete === true && edgeRecord.bytes > 1000 && edgeRecord.provider === 'edge' && edgeRecord.format === 'mp3', `${edgeRecord.bytes} bytes, ${edgeRecord.format}`)
 const cachedOnce = await tool.execute({ text: '缓存复用测试', instruction: '' }, {})
 const cachedOnceRecord = await waitSpeech(cachedOnce.id)
 const cachedTwice = await tool.execute({ text: '缓存复用测试', instruction: '' }, {})
