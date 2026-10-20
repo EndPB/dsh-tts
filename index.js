@@ -33,7 +33,7 @@ import { chunkText, sanitizeText } from './lib/text.js'
 import { createStreamHub, STREAM_PREFIX } from './lib/streams.js'
 import { AUDIO_PREFIX, serveAudioFile, serveStream } from './lib/routes.js'
 import { speechSourceFor } from './lib/session-text.js'
-import { definedOverrides } from './lib/providers/util.js'
+import { definedOverrides, outputFormatExtension } from './lib/providers/util.js'
 import { createCache, speechCacheKey } from './lib/cache.js'
 import { mp3DurationMs } from './lib/mp3-duration.js'
 
@@ -336,7 +336,10 @@ export function apply(ctx, rawConfig) {
    */
   function startSpeechJob({ key, text, providerId, options, speechInfo, mode, background, chunks, truncated }) {
     const provider = providers.get(providerId)
-    const format = options.format ?? 'mp3'
+    // Edge's CLI option is a full format name such as
+    // `audio-24khz-48kbitrate-mono-mp3`; its produced file is MP3.
+    const configuredFormat = options.format ?? 'mp3'
+    const format = providerId === 'edge' ? outputFormatExtension(configuredFormat) : configuredFormat
     const live = hub.begin({
       format,
       ...(background === true ? { attachTimeoutMs: 0 } : {}),
